@@ -71,8 +71,13 @@ public class BookRepository {
         books.add(new Book("5", "Software Engineering","01264", "Learning Concurrent Programming in Scala", "Aleksandar Prokopec", "Learn the art of building concurrent applications", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/Scala.jpg"));
         books.add(new Book("3", "Software Engineering","23123", "Modern Authentication with AzureAD ", "Vittorio Bertocci", "Azure active directory capabilities", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/AzureAD.jpg"));
         books.add(new Book("4", "Software Engineering","11201", "Microsoft Azure SQL", "Leonard G.Lobel", "Setp by step guide for developers", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/AzureSQL.jpg"));
-        books.add(new Book("7", "Software Engineering","28526", "Developing Azure and Web Services", "Rajdeep Das", "Exam Ref 70-487", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/AzureCert.jpg"));
+        books.add(new Book("7", "Software Engineering","28526", "The Pragmatic Programmer", "Andrew Hunt", "Your Journey To Mastery", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/pragmaticProgrammer.jpg"));
         books.add(new Book("8", "Software Engineering","95298", "Programming Microsoft Azure Service fabric", "Haishi Bai", "Service fabric for developers", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/ServiceFabric.jpg"));
+        books.add(new Book("9", "Software Engineering","95233", "Become An Awesome Software Architect", "Anatoly Volkhover", "Software architecture for developers", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/softwareArchitect.jpg"));
+        books.add(new Book("10", "Software Engineering","65433", "Designing Data-Intensive Applications", "Martin Kleppmann", "The Big Ideas Behind Reliable, Scalable, and Maintainable Systems", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/dataIntensiveApplication.jpg"));
+        books.add(new Book("11", "Software Engineering","75493", "Effective Java", "Joshua Bloch", "Best practices for the java platform", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/effectivejava.jpg"));
+        books.add(new Book("11", "Software Engineering","75493", "Clean Code", "Robert C. Martin", "A Handbook of Agile Software Craftsmanship", new BigDecimal(40.00), new BigDecimal(30.00),"https://mtchouimages.blob.core.windows.net/books/cleanCode.jpg"));
+
         return Flux.fromIterable(books);
     }
 

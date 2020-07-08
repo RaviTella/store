@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,16 +26,22 @@ public class HomeController {
     private CartRepository cartRepository;
 
     @Autowired
-    public HomeController(BookRepository bookRepository,CartRepository cartRepository) {
+    public HomeController(BookRepository bookRepository, CartRepository cartRepository) {
         this.bookRepository = bookRepository;
         this.cartRepository = cartRepository;
     }
 
-    @GetMapping(value = "/home")
-    public String home(Model model, WebSession session ){
+    @RequestMapping(value = "/ebooks/index", method = RequestMethod.GET)
+    public String home(Model model, WebSession session) {
         model.addAttribute("books", bookRepository.getBooks());
-        model.addAttribute("cartItemCount" ,cartRepository.getCartItemCount(session.getId()));
+        logger.info("Session ID in " + this.getClass() + ": " + session.getId());
+        model.addAttribute("cartItemCount", cartRepository.getCartItemCount(session.getId()));
         //get user info
         return "index";
+    }
+
+    @RequestMapping(value = "/ebooks/login", method = RequestMethod.GET)
+    public String login(Model model) {
+        return "login";
     }
 }

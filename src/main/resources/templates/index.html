@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en"  xmlns:th="https://www.thymeleaf.org"  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,38 +21,32 @@
 
     <!-- custom javascript -->
     <script th:src="@{/js/script.js}" type="text/javascript"></script>
-
-
-
 </head>
 <body>
 <header class="section-header">
-
-
     <section class="header-main shadow-sm">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row-sm align-items-center">
                 <div class="col-lg-4-24 col-sm-3">
                     <div class="category-wrap dropdown py-1">
                         <button type="button" class="btn btn-light  dropdown-toggle" data-toggle="dropdown"><i
                                 class="fa fa-bars"></i> Categories
                         </button>
-
                     </div>
                 </div>
                 <div class="col-lg-11-24 col-sm-8">
                     <form action="#" class="py-1">
                         <div class="input-group w-100">
                             <select class="custom-select" name="category_name">
-                                <option value="">All type</option>
+                                <option value="">All types</option>
                                 <option value="">Special</option>
-                                <option value="">Only best</option>
+                                <option value="">Top rated</option>
                                 <option value="">Latest</option>
                             </select>
                             <input type="text" class="form-control" style="width:50%;" placeholder="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-warning" type="submit">
-                                    <i class="fa fa-search"></i> Search
+                                    <i class="fa fa-search"></i>
                                 </button>
                             </div>
                         </div>
@@ -63,12 +57,10 @@
                         <div class="col-auto">
                             <div class="widget-header dropdown">
                                 <a href="#" data-toggle="dropdown" data-offset="20,10">
-
-                                    <div class="icontext">
-                                        <h6>Hello, Ravi Tella</h6>
+                                    <div class="icontext" sec:authorize="isAuthenticated()">
+                                        <span class="text-dark font-weight-bold"  sec:authentication="name"></span>
                                         <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i>
                                         </div>
-
                                     </div>
                                 </a>
                             </div>  <!-- widget-header .// -->
@@ -77,8 +69,8 @@
                             <a href="#" class="widget-header">
                                 <div class="icontext">
                                     <div class="icon-wrap">
-                                        <span class="text-warning icon-sm fa fa-shopping-cart"
-                                              th:text="${cartItemCount}"></span>
+                                        <a th:href="@{/ebooks/cart}"> <span class="text-warning icon-sm fa fa-shopping-cart"
+                                              th:text="${cartItemCount}"></span></a>
                                     </div>
                                 </div>
                             </a>
@@ -91,24 +83,23 @@
 </header> <!-- section-header.// -->
 
 <!-- ========================= SECTION CONTENT ========================= -->
-<section class="section-content bg padding-y-sm">
-    <div class="container">
+<section class="padding-y-sm">
+    <div class="container-fluid" style="color:blue;">
         <div class="row-sm">
-            <div class="col-md-3 col-sm-6" th:each="book : ${books}">
-                <form action="#" id="addItemForm" method="post" th:action="@{/cart/add}">
-                    <a class="thumbnail" href="#" onclick="parentNode.parentNode.submit()">
-                          <figure class="card card-product">
-                              <div class="fill"><img class="img-fluid" th:src="${book.image}"></div>
-                              <figcaption class="info-wrap">
-                                  <a href="#" class="title"></a>
-                                  <div class="subTotal-wrap">
-                                      <span class="subTotal-new" th:text="${book.discountedPrice}"></span>
-                                      <del class="subTotal-old" th:text="${book.price}"></del>
-                                      <input type="hidden" th:value="${book.id}"  id="bookId" name="bookId"/>
-                                      <input type="hidden" th:value="${book.title}"  id="title" name="title"/>
-                                      <input type="hidden" th:value="${book.discountedPrice}"  id="price" name="price"/>
-                                      <input type="hidden" th:value="${book.image}"  id="image" name="image"/>
-                                  </div> <!-- subTotal-wrap.// -->
+            <div class="col-md-2 col-sm-6" th:each="book : ${books}">
+                <form action="#" id="addItemForm" method="post" th:action="@{/ebooks/cart/item/add}">
+                    <a href="#" onclick="parentNode.submit()">
+                        <figure class="figure">
+                            <div class="fill"><img class="img-fluid" th:src="${book.image}" height="220"></div>
+                            <figcaption class="info-wrap">
+                                <div class="subTotal-wrap">
+                                    <span class="subTotal-new" th:inline="text">$[[${book.discountedPrice}]]</span>
+                                    <del class="subTotal-old" th:inline="text">$[[${book.price}]]</del>
+                                    <input type="hidden" th:value="${book.id}" id="bookId" name="bookId"/>
+                                    <input type="hidden" th:value="${book.title}" id="title" name="title"/>
+                                    <input type="hidden" th:value="${book.discountedPrice}" id="price" name="price"/>
+                                    <input type="hidden" th:value="${book.image}" id="image" name="image"/>
+                                </div> <!-- subTotal-wrap.// -->
                             </figcaption>
                         </figure> <!-- card // -->
                     </a>

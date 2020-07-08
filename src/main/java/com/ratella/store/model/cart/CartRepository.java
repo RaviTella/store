@@ -45,6 +45,7 @@ public class CartRepository {
     public Mono<Integer> getCartItemCount(String id) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
         queryOptions.setMaxBufferedItemCount(10);
+        queryOptions.setPartitionKey(new PartitionKey(id));
         String query = "SELECT * FROM cart c WHERE c.id = " + "'" + id + "'";
         return cosmosDB
                 .getContainer()
@@ -70,10 +71,30 @@ public class CartRepository {
 
 
     public Mono<Cart> getCart(String id) {
+        CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
+        queryOptions.setMaxBufferedItemCount(10);
+        queryOptions.setPartitionKey(new PartitionKey(id));
+        String query = "SELECT * FROM cart c WHERE c.id = " + "'" + id + "'";
         return cosmosDB
                 .getContainer()
-                .readItem(id, new PartitionKey(id), Cart.class)
-                .map(CosmosItemResponse::getItem);
+                .queryItems(
+                        query, queryOptions, Cart.class)
+                .byPage()
+                .map(feedResponse -> {
+                    Cart cart = feedResponse
+                            .getResults()
+                            //if there is no cart then return an empty cart, otherwise return the existing cart
+                            //TODO how to avoid returning new Cart()??
+                            .size() == 0 ? new Cart() : feedResponse
+                            .getElements()
+                            .stream()
+                            .findFirst()
+                            .get();
+                    return cart;
+                })
+                .single();
+
+
     }
 
     public Mono<Integer> createCart(Cart cart) {
@@ -130,5 +151,35 @@ public class CartRepository {
                 })
                 .single();
     }
+
+    public Mono<Integer> deleteCartItem(String cartId, String itemId) {
+        return cosmosDB
+                .getContainer()
+                .readItem(cartId, new PartitionKey(cartId), Cart.class)
+                .map(CosmosItemResponse::getItem)
+                .flatMap(cart -> {
+                    logger.info("Getting price of the item to be deleted");
+                    BigDecimal itemPrice = cart
+                            .getItems()
+                            .stream()
+                            .filter(item -> item.bookId.equals(itemId))
+                            .findFirst()
+                            .get()
+                            .getPrice();
+                    logger.info("Removing the item from the cart");
+                    cart
+                            .getItems()
+                            .removeIf(item -> item.bookId.equals(itemId));
+                    logger.info("Subtracting the removed item's cost from the cart subtotal");
+                    cart.setSubTotal(cart
+                            .getSubTotal()
+                            .subtract(itemPrice));
+                    return cosmosDB
+                            .getContainer()
+                            .upsertItem(cart);
+                })
+                .map(CosmosItemResponse::getStatusCode);
+    }
+
 
 }

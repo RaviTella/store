@@ -38,7 +38,6 @@ public class WebSecurityConfig {
                 .and()
                 .formLogin()
                 .loginPage("/ebooks/login");
-
         return http.build();
     }
 

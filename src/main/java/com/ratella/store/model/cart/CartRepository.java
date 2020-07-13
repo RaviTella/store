@@ -181,5 +181,12 @@ public class CartRepository {
                 .map(CosmosItemResponse::getStatusCode);
     }
 
+    public Mono<Integer> deleteCart(String id, String partitionKey) {
+        return cosmosDB
+                .getContainer()
+                .deleteItem(id, new PartitionKey(partitionKey))
+                .map(CosmosItemResponse::getStatusCode);
+    }
+
 
 }

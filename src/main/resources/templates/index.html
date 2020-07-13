@@ -90,7 +90,7 @@
                 <form action="#" id="addItemForm" method="post" th:action="@{/ebooks/cart/item/add}">
                     <a href="#" onclick="parentNode.submit()">
                         <figure class="figure">
-                            <div class="fill"><img class="img-fluid" th:src="${book.image}" height="220"></div>
+                            <div class="fill"><img  th:src="${book.image}" style="max-height: 250px; max-width: 250px;"></div>
                             <figcaption class="info-wrap">
                                 <div class="subTotal-wrap">
                                     <span class="subTotal-new" th:inline="text">$[[${book.discountedPrice}]]</span>
@@ -99,6 +99,8 @@
                                     <input type="hidden" th:value="${book.title}" id="title" name="title"/>
                                     <input type="hidden" th:value="${book.discountedPrice}" id="price" name="price"/>
                                     <input type="hidden" th:value="${book.image}" id="image" name="image"/>
+                                    <input type="hidden" th:value="${book.description}" id="description" name="description"/>
+                                    <input type="hidden" th:value="${book.author}" id="author" name="author"/>
                                 </div> <!-- subTotal-wrap.// -->
                             </figcaption>
                         </figure> <!-- card // -->

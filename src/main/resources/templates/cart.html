@@ -101,17 +101,17 @@
             <!--Grid column-->
             <div class="col-lg-8">
                 <h5 class="mb-4">Cart (<span th:text="${#lists.size(cart.items)}"></span> items)</h5>
+
                 <!-- Card -->
                 <div class="card wish-list mb-3" th:each="item : ${cart.items}">
-
                     <div class="card-body" >
                         <div class="row mb-4">
                             <div class="col-md-5 col-lg-3 col-xl-3">
                                 <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
                                     <a href="#!">
                                         <div class="mask waves-effect waves-light">
-                                            <img class="img-fluid w-100"
-                                                 th:src="${item.image}">
+                                            <img
+                                                 th:src="${item.image}" style="max-height: 150px; max-width: 150px;" >
                                             <div class="mask rgba-black-slight waves-effect waves-light"></div>
                                         </div>
                                     </a>
@@ -161,10 +161,22 @@
                             </div>
                         </li>
                         </ul>
-                        <button type="button" class="btn btn-primary btn-block waves-effect waves-light">Proceed to
+                        <form action="#" id="checkoutForm" method="post" th:action="@{/ebooks/order/checkout}" th:object="${cart}">
+                            <input type="hidden" th:value="${cart.subTotal}"  id="subTotal" name="subTotal"/>
+                            <th:block th:each="item, itemStat : *{items}">
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].bookId}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].title}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].description}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].author}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].image}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].quantity}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].price}" />
+                            </th:block>
+
+                        <button type="submit" class="btn btn-primary btn-block waves-effect waves-light">Proceed to
                             checkout
                         </button>
-
+                        </form>
                     </div>
                 </div>
                 <!-- Card -->

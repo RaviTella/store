@@ -11,6 +11,8 @@ public class CartItem {
     int quantity;
     BigDecimal price;
     String image;
+    String description;
+    String author;
 
     public String getBookId() {
         return bookId;
@@ -50,5 +52,21 @@ public class CartItem {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

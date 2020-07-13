@@ -1,0 +1,167 @@
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+
+    <link media="screen" rel="stylesheet" th:href="@{/js/jquery-2.0.0.min.js}"/>
+
+
+    <!-- Bootstrap4 files-->
+    <script th:src="@{/js/bootstrap.bundle.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css"/>
+
+    <!-- Font awesome 5 -->
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome/css/fontawesome-all.min.css}" type="text/css">
+
+
+    <!-- custom style -->
+    <link rel="stylesheet" th:href="@{/css/ui.css}" type="text/css"/>
+    <link media="only screen and (max-width: 1200px)" rel="stylesheet" th:href="@{/css/responsive.css}"/>
+
+    <!-- custom javascript -->
+    <script th:src="@{/js/script.js}" type="text/javascript"></script>
+
+
+</head>
+<body>
+<header class="section-header">
+    <section class="header-main shadow-sm">
+        <div class="container-fluid">
+            <div class="row-sm align-items-center">
+                <div class="col-lg-4-24 col-sm-3">
+                    <div class="category-wrap dropdown py-1">
+                        <button class="btn btn-light  dropdown-toggle" data-toggle="dropdown" type="button"><i
+                                class="fa fa-bars"></i> Categories
+                        </button>
+
+                    </div>
+                </div>
+                <div class="col-lg-11-24 col-sm-8">
+                    <form action="#" class="py-1">
+                        <div class="input-group w-100">
+                            <select class="custom-select" name="category_name">
+                                <option value="">All type</option>
+                                <option value="">Special</option>
+                                <option value="">Top rated</option>
+                                <option value="">Latest</option>
+                            </select>
+                            <input class="form-control" placeholder="Search" style="width:50%;" type="text">
+                            <div class="input-group-append">
+                                <button class="btn btn-warning" type="submit">
+                                    <i class="fa fa-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </form> <!-- search-wrap .end// -->
+                </div> <!-- col.// -->
+                <div class="col-lg-9-24 col-sm-12">
+                    <div class="widgets-wrap float-right row no-gutters py-1">
+                        <div class="col-auto">
+                            <div class="widget-header dropdown">
+                                <a data-offset="20,10" data-toggle="dropdown" href="#">
+                                    <div class="icontext" sec:authorize="isAuthenticated()">
+                                        <span class="text-dark font-weight-bold" sec:authentication="name"></span>
+                                        <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>  <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+                        <div class="col-auto">
+                            <a class="widget-header" href="#">
+                                <div class="icontext">
+                                    <div class="icon-wrap">
+                                        <span class="text-warning icon-sm fa fa-shopping-cart"
+                                              th:text="${cartItemCount}"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div> <!-- col.// -->
+                    </div> <!-- widgets-wrap.// row.// -->
+                </div> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- container.// -->
+    </section> <!-- header-main .// -->
+</header> <!-- section-header.// -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<!--Section: Block Content-->
+<!--Section: Block Content-->
+<section class="padding-y-sm">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"><h5>Shipping address</h5>
+            </div>
+            <div class="col-md-3">
+                Customer1 LastName <br>
+                5509 E 32nd street <br>
+                HOUSTON, TEXAS 77008
+            </div>
+            <div class="col"></div>
+
+        </div>
+        <hr class="col-md-6">
+        <div class="row">
+            <div class="col-md-3"><h5>Payment Method</h5>
+            </div>
+            <div class="col-md-3">
+                <span><img class="img-fluid" height="220"
+                           src=https://mtchouimages.blob.core.windows.net/books/mastercard.gif> Mastercard ending in 5432</span>
+            </div>
+
+            <div class="col"></div>
+        </div>
+        <hr class="col-md-6">
+        <form action="#" id="createOrderForm" method="post" th:action="@{/ebooks/order/create}" th:object="${order}">
+            <div class="row">
+                <div class="col-md-3"><h5>Review Items</h5>
+                </div>
+                <div class="col-md-3">
+                    <input type="hidden" th:value="${order.customerId}" id="customerId" name="customerId"/>
+                    <input type="hidden" th:value="${order.status}" id="status" name="status"/>
+                    <input type="hidden" th:value="${order.subTotal}" id="subTotal" name="subTotal"/>
+                    <figure class="figure" th:each="lineItem, itemStat : *{lineItems}">
+                        <div class="fill"><img th:src="${lineItem.image}" style="max-height: 100px; max-width: 100px;">
+                        </div>
+                        <figcaption>
+                            <div>
+                                <p class="mb-0 text-dark text-capitalize small font-weight-bold" th:inline="text">
+                                    [[${lineItem.title}]]: [[${lineItem.description}]]</p>
+                                <p class="mb-0 text-dark text-capitalize small" th:inline="text">by
+                                    [[${lineItem.author}]]</p>
+                                <p class="mb-1 text-danger text-capitalize medium font-weight-bold" th:inline="text">
+                                    $[[${lineItem.price}]]</p>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].bookId}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].title}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].description}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].author}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].image}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].quantity}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].price}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].image}"/>
+                            </div>
+                        </figcaption>
+                    </figure>
+
+
+                </div>
+                <div class="col"></div>
+            </div>
+            <hr class="col-xs-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="text-danger font-weight-bold"><button class="btn btn-warning" type="submit"
+                                                                       th:inline="text">Place your order</button> Order total: $[[${order.subTotal}]]</span>
+                </div>
+
+                <div class="col"></div>
+            </div>
+        </form>
+    </div>
+</section>
+<!--Section: Block Content-->
+
+</body>
+</html>

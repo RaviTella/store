@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
+    //session id
     private String id;
     private BigDecimal subTotal;
     private List<CartItem> items;

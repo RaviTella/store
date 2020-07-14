@@ -46,14 +46,20 @@ public class OrderController {
                 .createOrder(order)
                 .flatMap(responseStatusCode -> cartRepository.deleteCart(session.getId(), session.getId()))
                 .map(responseStatusCode -> {
-                    return "redirect:/ebooks/index";
+                    return "orderconfirmation";
                 });
     }
 
     @RequestMapping(value = "/ebooks/order/checkout", method = RequestMethod.POST)
     public String checkOut(@ModelAttribute Cart cart, Model model) {
         model.addAttribute("order", getOrder(cart));
-        return "checkOut";
+        return "checkout";
+    }
+
+    @RequestMapping(value = "/ebooks/orders/user", method = RequestMethod.GET)
+    public String getOrders(){
+        return "orders";
+
     }
 
     private Order getOrder(Cart cart) {

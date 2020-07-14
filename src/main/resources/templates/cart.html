@@ -34,7 +34,7 @@
                         <button type="button" class="btn btn-light  dropdown-toggle" data-toggle="dropdown"><i
                                 class="fa fa-bars"></i> Categories
                         </button>
-
+                        <a th:href="@{/ebooks/index}"><i class="fa fa-home fa-2x text-warning" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-11-24 col-sm-8">
@@ -49,7 +49,7 @@
                             <input type="text" class="form-control" style="width:50%;" placeholder="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-warning" type="submit">
-                                    <i class="fa fa-search"></i> Search
+                                    <i class="fa fa-search"></i>
                                 </button>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                             <div class="widget-header dropdown">
                                 <a href="#" data-toggle="dropdown" data-offset="20,10">
                                     <div class="icontext" sec:authorize="isAuthenticated()">
-                                        <span class="text-dark font-weight-bold"  sec:authentication="name"></span>
+                                        <p class="text-dark font-weight-bold">Hello, <span class="text-dark font-weight-bold"  sec:authentication="name"></span></p>
                                         <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i>
                                         </div>
                                     </div>
@@ -90,11 +90,11 @@
 <!--Section: Block Content-->
 <section class="padding-y-sm">
     <div class="container-fluid">
-        <div class="row justify-content-center" th:if="${cart == null || #lists.size(cart.items) == 0 }">
+        <div class="row justify-content-center d-flex align-items-center" th:if="${cart == null || #lists.size(cart.items) == 0 }">
             <h2 class="text-center">Your shopping cart is empty!</h2>
         </div>
-        <div class="row justify-content-center" th:if="${cart == null || #lists.size(cart.items) == 0 }">
-            <a th:href="@{/ebooks/index}" class="btn btn-primary btn-lg">Continue shopping</a>
+        <div class="row justify-content-center d-flex align-items-center" th:if="${cart == null || #lists.size(cart.items) == 0 }">
+            <a th:href="@{/ebooks/index}" class="btn btn-warning btn-lg">Continue shopping</a>
         </div>
         <!--Grid row-->
         <div class="row " th:if="${cart != null && #lists.size(cart.items) > 0 }">
@@ -117,7 +117,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-md-7 col-lg-9 col-xl-9">
+                            <div class="col-md-6 col-lg-9 col-xl-9">
                                 <div>
                                     <div class="d-flex justify-content-between">
                                         <div>
@@ -127,13 +127,14 @@
                                             <p class="mb-3 text-dark text-capitalize large">Type: Hardcover</p>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <a th:href="@{/ebooks/cart/delete/item/{id}(id=${item.bookId})}"  type="button"
-                                               class="card-link-secondary small text-uppercase mr-3"><i
-                                                    class="fas fa-trash-alt mr-1"></i> Remove item </a>
-                                            <a href="#!" type="button" class="card-link-secondary small text-uppercase"><i
-                                                    class="fas fa-heart mr-1"></i> Move to wish list </a>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                            <a th:href="@{/ebooks/cart/delete/item/{id}(id=${item.bookId})}">Delete</a>
+                                            </div>
+                                            <div class="col-md-8">
+                                            <a href="#!">Wish List</a>
+                                            </div>
                                         </div>
                                         <p class="mb-0"><span><strong
                                                 th:inline="text"> $[[${item.price}]]</strong></span></p>
@@ -173,7 +174,7 @@
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].price}" />
                             </th:block>
 
-                        <button type="submit" class="btn btn-primary btn-block waves-effect waves-light">Proceed to
+                        <button type="submit" class="btn btn-warning btn-block waves-effect waves-light">Proceed to
                             checkout
                         </button>
                         </form>

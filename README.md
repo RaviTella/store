@@ -36,7 +36,9 @@ Additionally, I plan to decompose the application into microservices and leverag
   * docker build -t <YOUR REPO>/store .
   * docker run -p 80:80 -e database.endpoint=<URI> -e database.key=<PRIMARY KEY> -t <YOUR REPO>/store
   * Access the WebApp at http://localhost/ebooks/index with the default accounts mentioned previously
-* If you just want to run a container, you could use mine:
+* If you want to just get the app up and running, you could use my container:
   * docker run -p 80:80 -e database.endpoint=<URI> -e database.key=<> -t ravitella/store
   * Access the WebApp at http://localhost/ebooks/index with the default accounts mentioned previously 
+ 
+ ![Image](BookStore.png)
 

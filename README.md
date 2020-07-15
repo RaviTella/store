@@ -39,6 +39,8 @@ Additionally, I plan to decompose the application into microservices and leverag
 * If you want to just get the app up and running, you could use my container:
   * docker run -p 80:80 -e database.endpoint=<URI> -e database.key=<> -t ravitella/store
   * Access the WebApp at http://localhost/ebooks/index with the default accounts mentioned previously 
- 
+
+* This is the home page
+
  ![Image](BookStore.png)
 

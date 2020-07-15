@@ -1,5 +1,5 @@
 # Overview
-This sample ecommerce application(sells only a few books:) for now) is built with Spring Boot 2.3.1 on Spring WebFlux stack. The application uses Azure Cosmos DB SQL API with the Java SDK 4.0, whish is based on reactor core.
+This sample ecommerce application(sells only a few books:) for now) is built with Spring Boot 2.3.1 on Spring WebFlux stack. This application uses Azure Cosmos DB SQL API with the Java SDK 4.0, whish is based on the reactor core.
 The current version has the following capabilities:
 * Display catalog
 * Add items to cart

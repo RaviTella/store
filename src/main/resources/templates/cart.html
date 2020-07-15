@@ -26,22 +26,17 @@
 </head>
 <body>
 <header class="section-header">
-    <section class="header-main shadow-sm">
-        <div class="container-fluid">
-            <div class="row-sm align-items-center">
-                <div class="col-lg-4-24 col-sm-3">
-                    <div class="category-wrap dropdown py-1">
-                        <button type="button" class="btn btn-light  dropdown-toggle" data-toggle="dropdown"><i
-                                class="fa fa-bars"></i> Categories
-                        </button>
-                        <a th:href="@{/ebooks/index}"><i class="fa fa-home fa-2x text-warning" aria-hidden="true"></i></a>
-                    </div>
+    <section>
+        <div class="container-fluid bg-dark padding-top-sm">
+            <div class="row-sm">
+                <div class="col-lg-4-24 col-sm-3 ">
+                    <a th:href="@{/ebooks/index}" class="text-white font-weight-bold"><i class="fa fa-home fa-2x text-warning"></i> Book Store</a>
                 </div>
                 <div class="col-lg-11-24 col-sm-8">
                     <form action="#" class="py-1">
                         <div class="input-group w-100">
                             <select class="custom-select" name="category_name">
-                                <option value="">All type</option>
+                                <option value="">All types</option>
                                 <option value="">Special</option>
                                 <option value="">Top rated</option>
                                 <option value="">Latest</option>
@@ -59,21 +54,20 @@
                     <div class="widgets-wrap float-right row no-gutters py-1">
                         <div class="col-auto">
                             <div class="widget-header dropdown">
-                                <a href="#" data-toggle="dropdown" data-offset="20,10">
-                                    <div class="icontext" sec:authorize="isAuthenticated()">
-                                        <p class="text-dark font-weight-bold">Hello, <span class="text-dark font-weight-bold"  sec:authentication="name"></span></p>
-                                        <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i>
-                                        </div>
-                                    </div>
-                                </a>
+                                <div class="icontext" sec:authorize="isAuthenticated()">
+                                    <p class="text-white ">Hello, <span class="text-white"  sec:authentication="name"></span><br>
+                                        <a href="#" class="text-white font-weight-bold">Account & Profile</a>
+                                    </p>
+
+                                </div>
                             </div>  <!-- widget-header .// -->
                         </div> <!-- col.// -->
                         <div class="col-auto">
                             <a href="#" class="widget-header">
                                 <div class="icontext">
                                     <div class="icon-wrap">
-                                        <span class="text-warning icon-sm fa fa-shopping-cart"
-                                              th:text="${cartItemCount}"></span>
+                                        <a th:href="@{/ebooks/cart}"> <span class="text-warning icon-sm fa fa-shopping-cart"
+                                                                            th:text="${cartItemCount}"></span></a>
                                     </div>
                                 </div>
                             </a>

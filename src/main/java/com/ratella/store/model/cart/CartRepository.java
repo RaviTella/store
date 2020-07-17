@@ -139,6 +139,8 @@ public class CartRepository {
                 .readItem(cartId, new PartitionKey(cartId), Cart.class)
                 .map(CosmosItemResponse::getItem)
                 .flatMap(cart -> {
+                    //Delete cart abd return if there is only one item
+                    if (cart.getItems().size()==1) return deleteCart(cartId,cartId);
                     logger.info("Getting price of the item to be deleted");
                     BigDecimal itemPrice = cart
                             .getItems()
@@ -155,11 +157,9 @@ public class CartRepository {
                     cart.setSubTotal(cart
                             .getSubTotal()
                             .subtract(itemPrice));
-                    return cosmosDB
-                            .getContainer()
-                            .upsertItem(cart);
-                })
-                .map(CosmosItemResponse::getStatusCode);
+                    return upsertCart(cart);
+                });
+
     }
 
     public Mono<Integer> deleteCart(String id, String partitionKey) {

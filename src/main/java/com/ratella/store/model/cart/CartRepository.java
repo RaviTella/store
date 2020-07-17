@@ -22,25 +22,6 @@ public class CartRepository {
         this.cosmosDB = cosmosDB;
     }
 
-    public Mono<Integer> getCartItemCount1(String id) {
-        CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        queryOptions.setMaxBufferedItemCount(10);
-        String query = "SELECT * FROM cart c WHERE c.id = " + "'" + id + "'";
-        return cosmosDB
-                .getContainer()
-                .queryItems(
-                        query, queryOptions, Cart.class)
-                .byPage()
-                .flatMap(feedResponse -> Flux.fromIterable(feedResponse.getElements()))
-                .map(cart -> {
-                    int itemCount = cart == null || cart.getItems() == null ? 0 : cart
-                            .getItems()
-                            .size();
-                    return itemCount;
-                })
-                .single();
-
-    }
 
     public Mono<Integer> getCartItemCount(String id) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();

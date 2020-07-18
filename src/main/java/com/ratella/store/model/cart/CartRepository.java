@@ -24,9 +24,6 @@ public class CartRepository {
 
 
     public Mono<Integer> getCartItemCount(String id) {
-        CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        queryOptions.setMaxBufferedItemCount(1);
-        queryOptions.setPartitionKey(new PartitionKey(id));
         return getCart(id)
                 .map(cart -> {
                     return cart
@@ -37,8 +34,6 @@ public class CartRepository {
 
 
     public Mono<Cart> getCart(String id) {
-        CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        queryOptions.setMaxBufferedItemCount(1);
         return cosmosDB
                 .getContainer()
                 .readItem(id, new PartitionKey(id), Cart.class)

@@ -51,8 +51,9 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/ebooks/order/checkout", method = RequestMethod.POST)
-    public String checkOut(@ModelAttribute Cart cart, Model model) {
+    public String checkOut(@ModelAttribute Cart cart, Model model,WebSession session) {
         model.addAttribute("order", getOrder(cart));
+        model.addAttribute("cartItemCount", cartRepository.getCartItemCount(session.getId()));
         return "checkout";
     }
 

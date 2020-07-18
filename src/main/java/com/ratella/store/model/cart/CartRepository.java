@@ -25,57 +25,25 @@ public class CartRepository {
 
     public Mono<Integer> getCartItemCount(String id) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        queryOptions.setMaxBufferedItemCount(10);
+        queryOptions.setMaxBufferedItemCount(1);
         queryOptions.setPartitionKey(new PartitionKey(id));
-        String query = "SELECT * FROM cart c WHERE c.id = " + "'" + id + "'";
-        return cosmosDB
-                .getContainer()
-                .queryItems(
-                        query, queryOptions, Cart.class)
-                .byPage()
-                .map(feedResponse -> {
-                    int itemCount = feedResponse
-                            .getResults()
-                            //if there is no cart then count is zero, otherwise get the cart item count
-                            .size() == 0 ? 0 : feedResponse
-                            .getElements()
-                            .stream()
-                            .findFirst()
-                            .get()
+        return getCart(id)
+                .map(cart -> {
+                    return cart
                             .getItems()
                             .size();
-                    return itemCount;
-                })
-                .single();
-
+                });
     }
 
 
     public Mono<Cart> getCart(String id) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        queryOptions.setMaxBufferedItemCount(10);
-        queryOptions.setPartitionKey(new PartitionKey(id));
-        String query = "SELECT * FROM cart c WHERE c.id = " + "'" + id + "'";
+        queryOptions.setMaxBufferedItemCount(1);
         return cosmosDB
                 .getContainer()
-                .queryItems(
-                        query, queryOptions, Cart.class)
-                .byPage()
-                .map(feedResponse -> {
-                    Cart cart = feedResponse
-                            .getResults()
-                            //if there is no cart then return an empty cart, otherwise return the existing cart
-                            //TODO how to avoid returning new Cart()??
-                            .size() == 0 ? new Cart() : feedResponse
-                            .getElements()
-                            .stream()
-                            .findFirst()
-                            .get();
-                    return cart;
-                })
-                .single();
-
-
+                .readItem(id, new PartitionKey(id), Cart.class)
+                .map(CosmosItemResponse::getItem)
+                .onErrorReturn(new Cart());
     }
 
     public Mono<Integer> createCart(Cart cart) {
@@ -133,14 +101,17 @@ public class CartRepository {
                 .single();
     }
 
+
     public Mono<Integer> deleteCartItem(String cartId, String itemId) {
         return cosmosDB
                 .getContainer()
                 .readItem(cartId, new PartitionKey(cartId), Cart.class)
                 .map(CosmosItemResponse::getItem)
                 .flatMap(cart -> {
-                    //Delete cart abd return if there is only one item
-                    if (cart.getItems().size()==1) return deleteCart(cartId,cartId);
+                    //Delete cart and return if the item being deleted is the only item in the cart
+                    if (cart
+                            .getItems()
+                            .size() == 1) return deleteCart(cartId, cartId);
                     logger.info("Getting price of the item to be deleted");
                     BigDecimal itemPrice = cart
                             .getItems()

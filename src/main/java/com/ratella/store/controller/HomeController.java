@@ -34,9 +34,7 @@ public class HomeController {
     @RequestMapping(value = "/ebooks/index", method = RequestMethod.GET)
     public String home(Model model, WebSession session) {
         model.addAttribute("books", bookRepository.getBooks());
-        logger.info("Session ID in " + this.getClass() + ": " + session.getId());
         model.addAttribute("cartItemCount", cartRepository.getCartItemCount(session.getId()));
-        //get user info
         return "index";
     }
 

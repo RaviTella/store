@@ -1,5 +1,6 @@
 package com.ratella.store.model.cart;
 
+import com.azure.cosmos.implementation.NotFoundException;
 import com.azure.cosmos.models.CosmosItemResponse;
 import com.azure.cosmos.models.CosmosQueryRequestOptions;
 import com.azure.cosmos.models.PartitionKey;
@@ -32,13 +33,13 @@ public class CartRepository {
                 });
     }
 
-
     public Mono<Cart> getCart(String id) {
         return cosmosDB
                 .getContainer()
                 .readItem(id, new PartitionKey(id), Cart.class)
                 .map(CosmosItemResponse::getItem)
-                .onErrorReturn(new Cart());
+                //If there is not cart for the id, just return a new cart instance
+                .onErrorReturn(NotFoundException.class, new Cart());
     }
 
     public Mono<Integer> createCart(Cart cart) {
@@ -58,7 +59,7 @@ public class CartRepository {
 
     public Mono<Integer> addCartItem(String cartId, CartItem item) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        queryOptions.setMaxBufferedItemCount(10);
+        queryOptions.setMaxBufferedItemCount(1);
         String query = "SELECT * FROM cart c WHERE c.id = " + "'" + cartId + "'";
         return cosmosDB
                 .getContainer()
@@ -68,7 +69,7 @@ public class CartRepository {
                 .flatMap(feedResponse -> {
                     if (feedResponse
                             .getResults()
-                            .size() == 0) { //There is no cart
+                            .size() == 0) { //There is no cart. Create one, add item and persist to DB
                         logger.info("THERE IS NO CART");
                         Cart cart = new Cart();
                         cart.setId(cartId);
@@ -77,7 +78,7 @@ public class CartRepository {
                                 .getItems()
                                 .add(item);
                         return upsertCart(cart);
-                    } else { //There is a cart
+                    } else { //There is a cart. Add item to the cart and persist it to DB
                         Cart cart = feedResponse
                                 .getResults()
                                 .get(0);
@@ -108,13 +109,7 @@ public class CartRepository {
                             .getItems()
                             .size() == 1) return deleteCart(cartId, cartId);
                     logger.info("Getting price of the item to be deleted");
-                    BigDecimal itemPrice = cart
-                            .getItems()
-                            .stream()
-                            .filter(item -> item.bookId.equals(itemId))
-                            .findFirst()
-                            .get()
-                            .getPrice();
+                    BigDecimal priceOfItemToBeRemoved = getPrice(itemId, cart);
                     logger.info("Removing the item from the cart");
                     cart
                             .getItems()
@@ -122,10 +117,20 @@ public class CartRepository {
                     logger.info("Subtracting the removed item's cost from the cart subtotal");
                     cart.setSubTotal(cart
                             .getSubTotal()
-                            .subtract(itemPrice));
+                            .subtract(priceOfItemToBeRemoved));
                     return upsertCart(cart);
                 });
 
+    }
+
+    private BigDecimal getPrice(String itemId, Cart cart) {
+        return cart
+                .getItems()
+                .stream()
+                .filter(item -> item.bookId.equals(itemId))
+                .findFirst()
+                .get()
+                .getPrice();
     }
 
     public Mono<Integer> deleteCart(String id, String partitionKey) {

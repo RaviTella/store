@@ -44,6 +44,13 @@ public class CartRepository {
                 .map(CosmosItemResponse::getStatusCode);
     }
 
+    public Mono<Integer> saveCart(Cart cart) {
+        return cosmosDB
+                .getContainer()
+                .createItem(cart)
+                .map(CosmosItemResponse::getStatusCode);
+    }
+
     private BigDecimal getPrice(String itemId, Cart cart) {
         return cart
                 .getItems()

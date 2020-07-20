@@ -51,7 +51,7 @@ public class DefaultCartService implements CartService {
                         cart
                                 .getItems()
                                 .add(item);
-                        return cartRepository.upsertCart(cart);
+                        return cartRepository.saveCart(cart);
                     } else {
                         cart
                                 .getItems()

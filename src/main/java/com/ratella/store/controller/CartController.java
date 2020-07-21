@@ -30,7 +30,7 @@ public class CartController {
         item.setQuantity(1);
         logger.info("adding item to cart");
         return cartService
-                .addItemToCart(session.getId(), item).log()
+                .addItemToCart(session.getId(), item)
                 .thenReturn("redirect:/ebooks/index");
 
     }

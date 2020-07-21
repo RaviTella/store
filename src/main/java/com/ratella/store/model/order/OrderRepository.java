@@ -18,7 +18,10 @@ public class OrderRepository {
         this.cosmosDB = cosmosDB;
     }
 
-    public Mono<Integer> createOrder(Order order){
-        return cosmosDB.getContainer().createItem(order).map(CosmosItemResponse::getStatusCode);
+    public Mono<Integer> createOrder(Order order) {
+        return cosmosDB
+                .getContainer()
+                .createItem(order)
+                .map(CosmosItemResponse::getStatusCode);
     }
 }

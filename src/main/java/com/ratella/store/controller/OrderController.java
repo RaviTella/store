@@ -1,16 +1,13 @@
 package com.ratella.store.controller;
 
 import com.ratella.store.model.cart.Cart;
-import com.ratella.store.model.cart.CartRepository;
+import com.ratella.store.model.cart.CartService;
 import com.ratella.store.model.order.LineItem;
 import com.ratella.store.model.order.Order;
-import com.ratella.store.model.order.OrderCosmosDB;
 import com.ratella.store.model.order.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,12 +24,12 @@ import java.util.UUID;
 public class OrderController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private OrderRepository orderRepository;
-    private CartRepository cartRepository;
+    private final CartService cartService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, CartRepository cartRepository) {
+    public OrderController(OrderRepository orderRepository, CartService cartService) {
         this.orderRepository = orderRepository;
-        this.cartRepository = cartRepository;
+        this.cartService = cartService;
     }
 
     @RequestMapping(value = "/ebooks/order/create", method = RequestMethod.POST)
@@ -44,21 +39,20 @@ public class OrderController {
                 .toString());
         return orderRepository
                 .createOrder(order)
-                .flatMap(responseStatusCode -> cartRepository.deleteCart(session.getId(), session.getId()))
-                .map(responseStatusCode -> {
-                    return "orderconfirmation";
-                });
+                .flatMap(responseStatusCode -> cartService.deleteCart(session.getId(), session.getId()))
+                .thenReturn("orderconfirmation");
+
     }
 
     @RequestMapping(value = "/ebooks/order/checkout", method = RequestMethod.POST)
-    public String checkOut(@ModelAttribute Cart cart, Model model,WebSession session) {
+    public String checkOut(@ModelAttribute Cart cart, Model model, WebSession session) {
         model.addAttribute("order", getOrder(cart));
-        model.addAttribute("cartItemCount", cartRepository.getCartItemCount(session.getId()));
+        model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
         return "checkout";
     }
 
     @RequestMapping(value = "/ebooks/orders/user", method = RequestMethod.GET)
-    public String getOrders(){
+    public String getOrders() {
         return "orders";
 
     }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
+
 @Controller
 public class CartController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -36,11 +38,12 @@ public class CartController {
     }
 
     @RequestMapping(value = "/ebooks/cart", method = RequestMethod.GET)
-    public Mono<String> getCart(Model model, WebSession session) {
+    public Mono<String> getCart(Model model, WebSession session, Principal principal) {
         logger.info("Session ID in /cart" + this.getClass() + ": " + session.getId());
         return cartService
                 .getCart(session.getId())
                 .map(cart -> {
+                    model.addAttribute("customerId", principal.getName());
                     model.addAttribute("cart", cart);
                     model.addAttribute("cartItemCount", cart
                             .getItems()

@@ -35,19 +35,22 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/ebooks/order/create", method = RequestMethod.POST)
-    public Mono<String> createOrder(Order order, WebSession session) {
+    public Mono<String> createOrder(Order order,Model model, WebSession session,Principal principal) {
         order.setId(UUID
                 .randomUUID()
                 .toString());
         return orderRepository
                 .createOrder(order)
-                .flatMap(responseStatusCode -> cartService.deleteCart(session.getId(), session.getId()))
+                .flatMap(responseStatusCode -> {
+                    model.addAttribute("customerId", principal.getName());
+                    return cartService.deleteCart(session.getId(), session.getId());})
                 .thenReturn("orderconfirmation");
 
     }
 
     @RequestMapping(value = "/ebooks/order/checkout", method = RequestMethod.POST)
     public String checkOut(@ModelAttribute Cart cart, Model model, WebSession session, Principal principal) {
+        model.addAttribute("customerId", principal.getName());
         model.addAttribute("order", getOrder(cart, principal.getName()));
         model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
         return "checkout";

@@ -93,7 +93,6 @@
             <!--Grid column-->
             <div class="col-lg-8">
                 <h5 class="mb-4">Cart (<span th:text="${#lists.size(cart.items)}"></span> items)</h5>
-
                 <!-- Card -->
                 <div class="card wish-list mb-3" th:each="item : ${cart.items}">
                     <div class="card-body" >
@@ -161,9 +160,9 @@
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].title}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].description}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].author}" />
-                                <input type="hidden" th:field="*{items[__${itemStat.index}__].image}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].quantity}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].price}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].image}" />
                             </th:block>
 
                         <button type="submit" class="btn btn-warning btn-block waves-effect waves-light">Proceed to

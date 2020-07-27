@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,21 +47,33 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/ebooks/order/checkout", method = RequestMethod.POST)
-    public String checkOut(@ModelAttribute Cart cart, Model model, WebSession session) {
-        model.addAttribute("order", getOrder(cart));
+    public String checkOut(@ModelAttribute Cart cart, Model model, WebSession session, Principal principal) {
+        model.addAttribute("order", getOrder(cart, principal.getName()));
         model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
         return "checkout";
     }
 
-    @RequestMapping(value = "/ebooks/orders/user", method = RequestMethod.GET)
-    public String getOrders() {
+/*    @RequestMapping(value = "/ebooks/order/customer/{customerId}", method = RequestMethod.GET)
+    public Mono<String> getCustomerOrders(@PathVariable String customerId, Model model, WebSession session) {
+        return orderRepository
+                .getOrders(customerId)
+                .map(order -> {
+                    logger.info(order.toString());
+                    return model.addAttribute("orders", order);
+                }).then(Mono.just("orders"));
+
+    }*/
+
+    @RequestMapping(value = "/ebooks/order/customer/{customerId}", method = RequestMethod.GET)
+    public String getCustomerOrders(@PathVariable String customerId, Model model, WebSession session) {
+        model.addAttribute("orders", orderRepository.getOrders(customerId));
         return "orders";
 
     }
 
-    private Order getOrder(Cart cart) {
+    private Order getOrder(Cart cart, String customerId) {
         Order order = new Order();
-        order.setCustomerId("customer1");
+        order.setCustomerId(customerId);
         order.setStatus("RECEIVED");
         order.setSubTotal(cart.getSubTotal());
         List<LineItem> lineItems = new ArrayList<>();

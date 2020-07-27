@@ -28,6 +28,7 @@ public class CartRepository {
                 .map(CosmosItemResponse::getItem)
                 //If there is not cart for the id, just return a new cart instance
                 .onErrorReturn(NotFoundException.class, new Cart());
+
     }
 
     public Mono<Integer> createCart(Cart cart) {

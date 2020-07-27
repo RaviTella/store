@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.server.WebSession;
 
+import java.security.Principal;
+
 @Controller
 public class HomeController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -24,9 +26,11 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/ebooks/index", method = RequestMethod.GET)
-    public String home(Model model, WebSession session) {
+    public String home(Model model, WebSession session, Principal principal) {
         model.addAttribute("books", bookRepository.getBooks());
         model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
+        model.addAttribute("customerId", principal.getName());
+        logger.info(principal.getName());
         return "index";
     }
 

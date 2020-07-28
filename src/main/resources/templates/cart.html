@@ -39,7 +39,7 @@
                                 <option value="">Top rated</option>
                                 <option value="">Latest</option>
                             </select>
-                            <input type="text" class="form-control" style="width:50%;" placeholder="Search">
+                            <input type="text" class="form-control" style="width:50%;" placeholder="tobe implemented">
                             <div class="input-group-append">
                                 <button class="btn btn-warning" type="submit">
                                     <i class="fa fa-search"></i>
@@ -48,18 +48,29 @@
                         </div>
                     </form> <!-- search-wrap .end// -->
                 </div> <!-- col.// -->
+
                 <div class="col-lg-9-24 col-sm-12">
                     <div class="widgets-wrap float-right row no-gutters py-1">
                         <div class="col-auto">
                             <div class="widget-header dropdown">
-                                <div class="icontext" sec:authorize="isAuthenticated()">
-                                    <p class="text-white ">Hello, <span class="text-white"  sec:authentication="name"></span><br>
+                                <div class="icontext">
+                                    <p class="text-white" th:inline="text">Hello, [[${customerId}]]<br>
                                         <a href="#" class="text-white font-weight-bold">Account & Profile</a>
+                                    </p>
+                                </div>
+                            </div>  <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+                        <div class="col-auto">
+                            <div class="widget-header dropdown">
+                                <div class="icontext">
+                                    <p class="text-white ">Returns</span><br>
+                                        <a th:href="@{/ebooks/order/customer/{customerId}(customerId=${customerId})}" class="text-white font-weight-bold">& Orders</a>
                                     </p>
 
                                 </div>
                             </div>  <!-- widget-header .// -->
                         </div> <!-- col.// -->
+
                         <div class="col-auto">
                             <a href="#" class="widget-header">
                                 <div class="icontext">
@@ -75,7 +86,8 @@
             </div> <!-- row.// -->
         </div> <!-- container.// -->
     </section> <!-- header-main .// -->
-</header> <!-- section-header.// -->
+</header>
+
 
 <!-- ========================= SECTION CONTENT ========================= -->
 <!--Section: Block Content-->
@@ -93,7 +105,6 @@
             <!--Grid column-->
             <div class="col-lg-8">
                 <h5 class="mb-4">Cart (<span th:text="${#lists.size(cart.items)}"></span> items)</h5>
-
                 <!-- Card -->
                 <div class="card wish-list mb-3" th:each="item : ${cart.items}">
                     <div class="card-body" >
@@ -161,9 +172,9 @@
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].title}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].description}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].author}" />
-                                <input type="hidden" th:field="*{items[__${itemStat.index}__].image}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].quantity}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].price}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].image}" />
                             </th:block>
 
                         <button type="submit" class="btn btn-warning btn-block waves-effect waves-light">Proceed to

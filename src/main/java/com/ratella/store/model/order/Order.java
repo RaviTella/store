@@ -1,9 +1,12 @@
 package com.ratella.store.model.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
 
     private String id;
@@ -46,5 +49,16 @@ public class Order {
 
     public void setLineItems(List<LineItem> lineItems) {
         this.lineItems = lineItems;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", status='" + status + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", subTotal=" + subTotal +
+                ", lineItems=" + lineItems +
+                '}';
     }
 }

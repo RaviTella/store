@@ -28,7 +28,7 @@ Additionally, I plan to decompose the application into microservices and leverag
 ## Then:
 * Update the cosmos DB endpoint, key and locations information in application.properties
 * mvn spring-boot:run from the project base
-* On straup the application creates 3 cosmos collections, namely book, order, cart. Each one will be configured with 400 RUs.
+* On startup the application creates 3 cosmos collections, namely book, order, cart. Each one will be configured with 400 RUs.
 * Access the WebApp at http://localhost/ebooks/index
 * Default user accounts customer1/customer1 and customer2/customer2
 * If you prefer docker:  

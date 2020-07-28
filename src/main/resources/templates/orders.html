@@ -1,4 +1,5 @@
-<html lang="en"  xmlns:th="https://www.thymeleaf.org"  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,15 +19,15 @@
     <!-- custom style -->
     <link th:href="@{/css/ui.css}" rel="stylesheet" type="text/css"/>
     <link th:href="@{/css/responsive.css}" rel="stylesheet" media="only screen and (max-width: 1200px)"/>
-
 </head>
 <body>
+
 <header class="section-header">
     <section>
         <div class="container-fluid bg-dark padding-top-sm">
             <div class="row-sm">
                 <div class="col-lg-4-24 col-sm-3 ">
-                        <a th:href="@{/ebooks/index}" class="text-white font-weight-bold"><i class="fa fa-home fa-2x text-warning"></i> Book Store</a>
+                    <a th:href="@{/ebooks/index}" class="text-white font-weight-bold"><i class="fa fa-home fa-2x text-warning"></i> Book Store</a>
                 </div>
                 <div class="col-lg-11-24 col-sm-8">
                     <form action="#" class="py-1">
@@ -51,11 +52,11 @@
                     <div class="widgets-wrap float-right row no-gutters py-1">
                         <div class="col-auto">
                             <div class="widget-header dropdown">
-                                    <div class="icontext">
-                                        <p class="text-white" th:inline="text">Hello, [[${customerId}]]<br>
-                                            <a href="#" class="text-white font-weight-bold">Account & Profile</a>
-                                        </p>
-                                    </div>
+                                <div class="icontext">
+                                    <p class="text-white" th:inline="text">Hello, [[${customerId}]]<br>
+                                        <a href="#" class="text-white font-weight-bold">Account & Profile</a>
+                                    </p>
+                                </div>
                             </div>  <!-- widget-header .// -->
                         </div> <!-- col.// -->
                         <div class="col-auto">
@@ -74,7 +75,7 @@
                                 <div class="icontext">
                                     <div class="icon-wrap">
                                         <a th:href="@{/ebooks/cart}"> <span class="text-warning icon-sm fa fa-shopping-cart"
-                                              th:text="${cartItemCount}"></span></a>
+                                                                            th:text="${cartItemCount}"></span></a>
                                     </div>
                                 </div>
                             </a>
@@ -86,37 +87,62 @@
     </section> <!-- header-main .// -->
 </header>
 
-
-<!-- ========================= SECTION CONTENT ========================= -->
 <section class="padding-y-sm">
-    <div class="container-fluid" style="color:blue;">
-        <div class="row-sm">
-            <div class="col-md-2 col-sm-6" th:each="book : ${books}">
-                <form action="#" id="addItemForm" method="post" th:action="@{/ebooks/cart/item/add}">
-                    <a href="#" onclick="parentNode.submit()">
-                        <figure class="figure">
-                            <div class="fill"><img  th:src="${book.image}" style="max-height: 250px; max-width: 250px;"></div>
-                            <figcaption class="info-wrap">
-                                <div class="subTotal-wrap">
-                                    <span class="subTotal-new text-dark" th:inline="text">$[[${book.discountedPrice}]]</span>
-                                    <del class="subTotal-old text-dark" th:inline="text">$[[${book.price}]]</del>
-                                    <input type="hidden" th:value="${book.id}" id="bookId" name="bookId"/>
-                                    <input type="hidden" th:value="${book.title}" id="title" name="title"/>
-                                    <input type="hidden" th:value="${book.discountedPrice}" id="price" name="price"/>
-                                    <input type="hidden" th:value="${book.image}" id="image" name="image"/>
-                                    <input type="hidden" th:value="${book.description}" id="description" name="description"/>
-                                    <input type="hidden" th:value="${book.author}" id="author" name="author"/>
-                                </div> <!-- subTotal-wrap.// -->
-                            </figcaption>
-                        </figure> <!-- card // -->
-                    </a>
-                </form>
-            </div> <!-- col // -->
-        </div> <!-- row.// -->
-        <div class="padding-y-sm">
-        </div>
-    </div><!-- container // -->
-</section>
+<div class="container col-md-7">
+    <div class="row justify-content-center d-flex align-items-center" th:if="${#lists.isEmpty(orders)}">
+        <h2 class="text-center">You have no orders!</h2>
+    </div>
+    <div class="card mb-5" th:each="order : ${orders}">  <!--FOR EACH ORDER-->
+        <div class="card-header">
+            <div class="row">              <!--ROW1-->
+                <div class="col-md-3">     <!--COLUMN1-->
+                    ORDER PLACED<br>
+                    July 23, 2020
+                </div>
+                <div class="col-md-3" th:inline="text">     <!--COLUMN2-->
+                    TOTAL<br>
+                    $[[${order.subTotal}]]
+                </div>
 
+                <div class="col-md-3">     <!--COLUMN3-->
+                    SHIP TO<br>
+                    [[${order.customerId}]]
+                </div>
+                <div class="col-md-3">     <!--COLUMN4-->
+                    ORDER #<br>
+                    114-2323824-4150600
+                </div>
+            </div>
+        </div> <!--HEADER ENDS-->
+
+        <div class="card-body" th:each="lineItem : ${order.lineItems}">
+            <div class="row">    <!--FOR EACH LINE ITEM-->
+                <div class="col-md-3">
+                    <h6 class="card-title" th:inline="text">[[${order.status}]] today</h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">     <!--COLUMN1-->
+                    <img th:src="${lineItem.image}" style="max-height: 100px; max-width: 100px;">
+                </div>
+                <div class="col-md-8">     <!--COLUMN2-->
+                    <div class="row">
+                        <div class="col-md-8" th:text="${lineItem.title}">
+                        </div>
+                        <div class="col-md-8">
+                            Sold by: EBooks
+                        </div>
+                        <div class="col-md-8" th:inline="text">
+                            $[[${lineItem.price}]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mb-0 pb-0">
+        </div>
+    </div>
+</div>
+</div>
+</section>
 </body>
 </html>

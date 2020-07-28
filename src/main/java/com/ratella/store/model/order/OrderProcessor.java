@@ -38,7 +38,7 @@ public class OrderProcessor {
 
     public ChangeFeedProcessor getChangeFeedProcessor(String hostName, CosmosAsyncContainer feedContainer, CosmosAsyncContainer leaseContainer) {
         ChangeFeedProcessorOptions changeFeedOptions = new ChangeFeedProcessorOptions();
-        changeFeedOptions.setFeedPollDelay(Duration.ofSeconds(30));
+        changeFeedOptions.setFeedPollDelay(Duration.ofSeconds(20));
         changeFeedOptions.setStartFromBeginning(true);
         return new ChangeFeedProcessorBuilder()
                 .options(changeFeedOptions)
@@ -51,16 +51,19 @@ public class OrderProcessor {
                         Order order = null;
                         try {
                             order = mapper.convertValue(document, Order.class);
-                        } catch ( Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        order.setStatus("SHIPPED");
-
-                       logger.info("Processing Order # " + order.getId());
-                        this.cosmosDB
-                                .getContainer("order")
-                                .upsertItem(order).subscribe();
-                       logger.info("Shipped Order # " + order.getId());
+                        if (order
+                                .getStatus()
+                                .equals("RECEIVED")) {
+                            order.setStatus("SHIPPED");
+                            logger.info("Processing Order # " + order.getId());
+                            this.cosmosDB
+                                    .getContainer("order")
+                                    .upsertItem(order)
+                                    .subscribe();
+                        }
                     }
 
                 })

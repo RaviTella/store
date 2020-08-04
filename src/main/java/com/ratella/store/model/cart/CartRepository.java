@@ -57,7 +57,7 @@ public class CartRepository {
         return cart
                 .getItems()
                 .stream()
-                .filter(item -> item.bookId.equals(itemId))
+                .filter(item -> item.id.equals(itemId))
                 .findFirst()
                 .get()
                 .getPrice();

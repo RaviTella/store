@@ -27,7 +27,7 @@ public class OrderProcessor {
         this.cosmosDB = orderCosmosDB;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void start() {
         ChangeFeedProcessor changeFeedProcessorInstance = getChangeFeedProcessor("StoreOrderHot_1", cosmosDB.getContainer("order"), cosmosDB.getContainer("order-lease"));
         changeFeedProcessorInstance

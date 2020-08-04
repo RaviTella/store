@@ -1,16 +1,11 @@
 package com.ratella.store.model.cart;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +28,11 @@ public class DefaultCartServiceUnitTest {
 
         List<CartItem> cartItems = new ArrayList<>();
         CartItem item1 = new CartItem();
-        item1.setBookId("i1");
+        item1.setId("i1");
         item1.setPrice(new BigDecimal(40));
         cartItems.add(item1);
         CartItem item2 = new CartItem();
-        item2.setBookId("i2");
+        item2.setId("i2");
         item2.setPrice(new BigDecimal(30));
 
         cartItems.add(item2);
@@ -48,8 +43,9 @@ public class DefaultCartServiceUnitTest {
 
 
         when(cartRepositoryMock.getCartById("c1")).thenReturn(Mono.just(cart1));
-        when(cartRepositoryMock.upsertCart(cart1)).thenReturn(Mono.just(200));
         when(cartRepositoryMock.deleteCart(any(), any())).thenReturn(Mono.just(200));
+        when(cartRepositoryMock.upsertCart(cart1)).thenReturn(Mono.just(200));
+
 
         CartService cartService = new DefaultCartService(cartRepositoryMock);
         cartService
@@ -69,7 +65,7 @@ public class DefaultCartServiceUnitTest {
 
         List<CartItem> cartItems = new ArrayList<>();
         CartItem item1 = new CartItem();
-        item1.setBookId("i1");
+        item1.setId("i1");
         item1.setPrice(new BigDecimal(40));
         cartItems.add(item1);
 
@@ -112,7 +108,7 @@ public class DefaultCartServiceUnitTest {
         Cart cart1 = new Cart();
 
         CartItem item1 = new CartItem();
-        item1.setBookId("i1");
+        item1.setId("i1");
         item1.setPrice(new BigDecimal(40));
         when(cartRepositoryMock.getCartById("c1")).thenReturn(Mono.just(cart1));
         when(cartRepositoryMock.saveCart(cart1)).thenReturn(Mono.just(200));
@@ -128,7 +124,7 @@ public class DefaultCartServiceUnitTest {
     @Test
     public void addItemToAnExistingCartTest(){
         CartItem item1 = new CartItem();
-        item1.setBookId("i1");
+        item1.setId("i1");
         item1.setPrice(new BigDecimal(40));
         Cart cart1 = new Cart();
         cart1.setId("c1");
@@ -136,7 +132,7 @@ public class DefaultCartServiceUnitTest {
         cart1.getItems().add(item1);
 
         CartItem item2 = new CartItem();
-        item2.setBookId("i2");
+        item2.setId("i2");
         item2.setPrice(new BigDecimal(100));
 
 

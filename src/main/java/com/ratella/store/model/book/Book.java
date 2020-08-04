@@ -1,5 +1,7 @@
 package com.ratella.store.model.book;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 
 public class Book {
@@ -13,6 +15,8 @@ public class Book {
     private BigDecimal discountedPrice;
     private String image;
 
+    public Book(){
+    }
     public Book(String id, String category, String isbn, String title, String author, String description, BigDecimal price, BigDecimal discountedPrice, String image) {
         this.id = id;
         this.category = category;
@@ -95,5 +99,20 @@ public class Book {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", category='" + category + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", discountedPrice=" + discountedPrice +
+                ", image='" + image + '\'' +
+                '}';
     }
 }

@@ -14,8 +14,6 @@ public class Cart {
         this.items = new ArrayList<>();
     }
 
-
-
     public Cart(String id) {
         this.id = id;
     }

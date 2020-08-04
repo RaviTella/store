@@ -133,7 +133,7 @@
                                     <div class="d-flex justify-content-between">
                                         <div class="row">
                                             <div class="col-md-8">
-                                            <a th:href="@{/ebooks/cart/delete/item/{id}(id=${item.bookId})}">Delete</a>
+                                            <a th:href="@{/ebooks/cart/delete/item/{id}(id=${item.id})}">Delete</a>
                                             </div>
                                             <div class="col-md-8">
                                             <a href="#!">Wish List</a>
@@ -168,7 +168,7 @@
                         <form action="#" id="checkoutForm" method="post" th:action="@{/ebooks/order/checkout}" th:object="${cart}">
                             <input type="hidden" th:value="${cart.subTotal}"  id="subTotal" name="subTotal"/>
                             <th:block th:each="item, itemStat : *{items}">
-                                <input type="hidden" th:field="*{items[__${itemStat.index}__].bookId}" />
+                                <input type="hidden" th:field="*{items[__${itemStat.index}__].id}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].title}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].description}" />
                                 <input type="hidden" th:field="*{items[__${itemStat.index}__].author}" />

@@ -41,6 +41,7 @@ public class DefaultCartService implements CartService {
         return cartRepository.getCartById(id);
     }
 
+    @Override
     public Mono<Void> addItemToCart(String cartId, CartItem item) {
         return cartRepository
                 .getCartById(cartId)
@@ -85,7 +86,7 @@ public class DefaultCartService implements CartService {
                     logger.info("Removing the item from the cart");
                     cart
                             .getItems()
-                            .removeIf(item -> item.bookId.equals(itemId));
+                            .removeIf(item -> item.id.equals(itemId));
                     ;
                     return cartRepository.upsertCart(cart);
                 })
@@ -97,7 +98,7 @@ public class DefaultCartService implements CartService {
         return cart
                 .getItems()
                 .stream()
-                .filter(item -> item.bookId.equals(itemId))
+                .filter(item -> item.id.equals(itemId))
                 .findFirst()
                 .get()
                 .getPrice();

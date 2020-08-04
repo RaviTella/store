@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class OrderRepository {
     }
 
     public Flux<Order> getOrders(String customerId) {
-        String query = "SELECT * FROM o WHERE o.customerId =  @customerId";
+        String query = "SELECT * FROM o WHERE o.customerId =  @customerId ORDER BY o._ts DESC";
         SqlParameter parameter = new SqlParameter("@customerId", customerId);
         List<SqlParameter> sqlParameters = new ArrayList<>();
         sqlParameters.add(parameter);

@@ -83,12 +83,6 @@ public class BookCosmosDB {
     }
 
     public void loadBooks() {
-        if (this.container
-                .readItem("1", new PartitionKey("Software Engineering"), Book.class)
-                .block()
-                .getStatusCode() == 200) {
-            return;
-        }
         List<Book> books = new ArrayList<Book>();
         books.add(new Book("1", "Software Engineering", "01234", "Getting Started with kubernetes", "Jonathan Baier", "Learn Kubernetes the right way", new BigDecimal(40.00), new BigDecimal(30.00), "https://mtchouimages.blob.core.windows.net/books/Kubernetes.jpg"));
         books.add(new Book("2", "Software Engineering", "95201", "Learning Docker Networking", "Rajdeep Das", "Docker networking deep dive", new BigDecimal(40.00), new BigDecimal(30.00), "https://mtchouimages.blob.core.windows.net/books/DockerNetworking.jpg"));
@@ -116,9 +110,24 @@ public class BookCosmosDB {
         books.add(new Book("22", "Software Engineering", "96297", "Programming C# 8.0", "Ian Griffiths", "Build Cloud, Web, and Desktop Applications", new BigDecimal(75.00), new BigDecimal(59.00), "https://mtchouimages.blob.core.windows.net/books/programmingcsharp8.0.jpg"));
         books.add(new Book("23", "Software Engineering", "88297", "The Rust Programming Language", "Steve Klabnik", "The official book on the Rust programming language", new BigDecimal(55.00), new BigDecimal(49.00), "https://mtchouimages.blob.core.windows.net/books/RustProgrammingLanguage.jpg"));
         books.add(new Book("24", "Software Engineering", "68597", "Unit Testing", "Vladimir Khorikov", "Principles, Practices, and Patterns 1st Edition", new BigDecimal(55.00), new BigDecimal(49.00), "https://mtchouimages.blob.core.windows.net/books/unitTesting.jpg"));
+
+        books.add(new Book("25", "Software Engineering", "67597", "Cassandra, The Definitive Guide", "Jeff Carpenter", "Distributed Data at Web Scale 3rd Edition", new BigDecimal(65.00), new BigDecimal(59.00), "https://mtchouimages.blob.core.windows.net/books/CassandraDefinitiveguide.jpg"));
+        books.add(new Book("26", "Software Engineering", "67587", "Clean Code", "Robert C. Martin", "A Handbook of Agile Software Craftsmanship 1st Edition", new BigDecimal(49.00), new BigDecimal(35.00), "https://mtchouimages.blob.core.windows.net/books/cleanCode.jpg"));
+        books.add(new Book("27", "Software Engineering", "23587", "Docker in Practice", "Ian Miell", "2nd Edition", new BigDecimal(49.00), new BigDecimal(44.00), "https://mtchouimages.blob.core.windows.net/books/DockerInPractice.jpg"));
+        books.add(new Book("28", "Software Engineering", "23227", "Elasticsearch in Action", "Ian Miell", "1st Edition", new BigDecimal(44.00), new BigDecimal(42.00), "https://mtchouimages.blob.core.windows.net/books/ElasticSearchInAction.jpg"));
+        books.add(new Book("29", "Software Engineering", "24697", "Graph Algorithms", "Mark Needham", "Practical Examples in Apache Spark and Neo4j 1st Edition", new BigDecimal(45.00), new BigDecimal(41.00), "https://mtchouimages.blob.core.windows.net/books/GraphAlgorithms.jpg"));
+        books.add(new Book("30", "Software Engineering", "44897", "The Practitioner's Guide to Graph Data", "Denise Gosnell", "Applying Graph Thinking and Graph Technologies to Solve Complex Problems 1st Edition", new BigDecimal(45.00), new BigDecimal(35.00), "https://mtchouimages.blob.core.windows.net/books/GuideToGraphDatabases.jpg"));
+        books.add(new Book("31", "Software Engineering", "43147", "Java Concurrency in Practice", "Brian Goetz", "1st Edition", new BigDecimal(59.00), new BigDecimal(19.00), "https://mtchouimages.blob.core.windows.net/books/JavaConcurrency.jpg"));
+        books.add(new Book("32", "Software Engineering", "53147", "Kafka, The Definitive Guide", "Neha Narkhede", "Real-Time Data and Stream Processing at Scale", new BigDecimal(54.00), new BigDecimal(35.00), "https://mtchouimages.blob.core.windows.net/books/kaafkDefnitiveGuide.jpg"));
+        books.add(new Book("33", "Software Engineering", "58147", "MongoDB, The Definitive Guide", "Shannon Bradshaw", "Powerful and Scalable Data Storage 3rd Edition", new BigDecimal(35.00), new BigDecimal(28.00), "https://mtchouimages.blob.core.windows.net/books/mongodb.jpg"));
+        books.add(new Book("34", "Software Engineering", "77147", "Programming Ruby 1.9 & 2.0", "Dave Thomas", "The Pragmatic Programmers' Guide (The Facets of Ruby) 4th Edition", new BigDecimal(30.00), new BigDecimal(18.00), "https://mtchouimages.blob.core.windows.net/books/ProgrammingInRuby.jpg"));
+        books.add(new Book("35", "Software Engineering", "79847", "RabbitMQ Cookbook", "Sigismondo Boschi", "Over 70 practical recipes to help you build messaging applications", new BigDecimal(44.00), new BigDecimal(39.00), "https://mtchouimages.blob.core.windows.net/books/rabbitMQCookBook.jpg"));
+        books.add(new Book("36", "Software Engineering", "99847", "Seven Databases in Seven Weeks", "Luc Perkins", "A Guide to Modern Databases and the NoSQL Movement", new BigDecimal(47.00), new BigDecimal(43.00), "https://mtchouimages.blob.core.windows.net/books/SevenDatabasesInSevenWeeks.jpg"));
+
+
         Flux
                 .fromIterable(books)
-                .flatMap(this.container::createItem)
+                .flatMap(this.container::upsertItem)
                 .blockLast();
 
     }

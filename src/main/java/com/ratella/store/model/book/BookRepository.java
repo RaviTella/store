@@ -47,7 +47,6 @@ public class BookRepository {
 
     public Flux<Response>  getBooksPage(String continuationToken) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
-        String nextContinuationToken = null;
         String query = "SELECT * FROM Book";
         CosmosPagedFlux<Book> pagedFluxResponse = cosmosDB
                 .getContainer()

@@ -32,9 +32,8 @@ public class HomeController {
 
     @RequestMapping(value = "/ebooks/index", method = RequestMethod.GET)
     public String home(Model model, WebSession session, Principal principal) {
-        List<String> token = new ArrayList<>();
         model.addAttribute("books", bookRepository.getBooks().flatMap(response -> Flux.fromIterable(response.getBooks())));
-        model.addAttribute("continuationToken",bookRepository.getBooks().map(Response::getContinuationToken));
+        model.addAttribute("continuationToken",bookRepository.getBooks().map(Response::getContinuationToken).onErrorReturn(""));
         model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
         model.addAttribute("customerId", principal.getName());
 

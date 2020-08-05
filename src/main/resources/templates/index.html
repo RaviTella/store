@@ -21,11 +21,14 @@
     <link media="only screen and (max-width: 1200px)" rel="stylesheet" th:href="@{/css/responsive.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script th:inline="javascript">
+    <script type="text/javascript" >
     var loading=false;
 $(window).scroll(function () {
-    var token = [[${continuationToken}]];
-     if (loading==false && $(window).scrollTop() >= $(document).height() - $(window).height()) {
+    //var token = [[${continuationToken}]];
+    var token =$('#continuationToken').attr('value');
+    token = (token.substring(1, token.length-1));
+
+     if (loading==false && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
          loading=true;
           $.ajax({
             type: "POST",
@@ -48,11 +51,31 @@ $(window).scroll(function () {
 
     function generate(response) {
        $.each(response.books, function(i, book) {
-       var text = "";
-         $('#existing').append('<div>Test</div>');
+       var text = `<div class="col-md-2 col-sm-6">
+                <form action="/ebooks/cart/item/add" id="addItemForm" method="post">
+                    <a href="#" onclick="parentNode.submit()">
+                        <figure class="figure">
+                            <div class="fill"><img style="max-height: 250px; max-width: 250px;" src="https://mtchouimages.blob.core.windows.net/books/Scala.jpg">
+                            </div>
+                            <figcaption class="info-wrap">
+                                <div class="subTotal-wrap">
+                                    <span class="subTotal-new text-dark">$30</span>
+                                    <del class="subTotal-old text-dark">$40</del>
+                                    <input id="title" name="title" value="Learning Concurrent Programming in Scala" type="hidden"/>
+                                    <input id="price" name="price" value="30" type="hidden"/>
+                                    <input id="image" name="image" value="https://mtchouimages.blob.core.windows.net/books/Scala.jpg" type="hidden"/>
+                                    <input id="description" name="description" value="Learn the art of building concurrent applications"
+                                           type="hidden"/>
+                                    <input id="author" name="author" value="Aleksandar Prokopec" type="hidden"/>
+                                </div> <!-- subTotal-wrap.// -->
+                            </figcaption>
+                        </figure> <!-- card // -->
+                    </a>
+                </form>
+            </div>`;
+         $('#existing').append(text);
        });
 };
-
 
     </script>
 

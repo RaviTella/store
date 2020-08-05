@@ -46,7 +46,7 @@ public class HomeController {
     public Mono<Response> next(@RequestBody String continuationToken, WebSession session, Principal principal) {
         logger.info("CALLING NEXT ACTION");
         Flux<Response> result=bookRepository.getBooksPage(continuationToken);
-        bookRepository.getBooksPage(continuationToken).map(Response::getBooks).subscribe(System.out::println);
+        bookRepository.getBooksPage(continuationToken).map(Response::getBooks);
         return result.single();
     }
 

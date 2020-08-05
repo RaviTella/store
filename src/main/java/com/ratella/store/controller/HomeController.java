@@ -44,9 +44,8 @@ public class HomeController {
     @PostMapping(value = "/ebooks/next")
     @ResponseBody
     public Mono<Response> next(@RequestBody String continuationToken, WebSession session, Principal principal) {
-        logger.info("CALLING NEXT ACTION");
+        logger.info("CALLING NEXT ACTION with Token: "+ continuationToken);
         Flux<Response> result=bookRepository.getBooksPage(continuationToken);
-        bookRepository.getBooksPage(continuationToken).map(Response::getBooks);
         return result.single();
     }
 

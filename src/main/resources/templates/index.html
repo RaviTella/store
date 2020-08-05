@@ -24,11 +24,10 @@
     <script type="text/javascript" >
     var loading=false;
 $(window).scroll(function () {
-    //var token = [[${continuationToken}]];
     var token =$('#continuationToken').attr('value');
     token = (token.substring(1, token.length-1));
 
-     if (loading==false && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+     if (loading==false && token && $(window).scrollTop() >= $(document).height() - $(window).height() -10) {
          loading=true;
           $.ajax({
             type: "POST",
@@ -55,18 +54,18 @@ $(window).scroll(function () {
                 <form action="/ebooks/cart/item/add" id="addItemForm" method="post">
                     <a href="#" onclick="parentNode.submit()">
                         <figure class="figure">
-                            <div class="fill"><img style="max-height: 250px; max-width: 250px;" src="https://mtchouimages.blob.core.windows.net/books/Scala.jpg">
+                            <div class="fill"><img style="max-height: 250px; max-width: 250px;" src="${book.image}">
                             </div>
                             <figcaption class="info-wrap">
                                 <div class="subTotal-wrap">
-                                    <span class="subTotal-new text-dark">$30</span>
-                                    <del class="subTotal-old text-dark">$40</del>
+                                    <span class="subTotal-new text-dark">$${book.discountedPrice}</span>
+                                    <del class="subTotal-old text-dark">$${book.price}</del>
                                     <input id="title" name="title" value="Learning Concurrent Programming in Scala" type="hidden"/>
-                                    <input id="price" name="price" value="30" type="hidden"/>
-                                    <input id="image" name="image" value="https://mtchouimages.blob.core.windows.net/books/Scala.jpg" type="hidden"/>
-                                    <input id="description" name="description" value="Learn the art of building concurrent applications"
+                                    <input id="price" name="price" value="${book.discountedPrice}" type="hidden"/>
+                                    <input id="image" name="image" value="${book.image}" type="hidden"/>
+                                    <input id="description" name="description" value=""${book.description}""
                                            type="hidden"/>
-                                    <input id="author" name="author" value="Aleksandar Prokopec" type="hidden"/>
+                                    <input id="author" name="author" value="${book.author}" type="hidden"/>
                                 </div> <!-- subTotal-wrap.// -->
                             </figcaption>
                         </figure> <!-- card // -->
@@ -74,6 +73,7 @@ $(window).scroll(function () {
                 </form>
             </div>`;
          $('#existing').append(text);
+         $('#continuationToken').val(response.token);
        });
 };
 

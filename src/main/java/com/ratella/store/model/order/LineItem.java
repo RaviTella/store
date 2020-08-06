@@ -3,7 +3,7 @@ package com.ratella.store.model.order;
 import java.math.BigDecimal;
 
 public class LineItem {
-    String bookId;
+    String id;
     String title;
     String description;
     String author;
@@ -11,12 +11,12 @@ public class LineItem {
     int quantity;
     BigDecimal price;
 
-    public String getBookId() {
-        return bookId;
+    public String getId() {
+        return id;
     }
 
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
+    public void setId(String bookId) {
+        this.id = bookId;
     }
 
     public String getTitle() {

@@ -137,7 +137,7 @@
                                     [[${lineItem.author}]]</p>
                                 <p class="mb-1 text-danger text-capitalize medium font-weight-bold" th:inline="text">
                                     $[[${lineItem.price}]]</p>
-                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].bookId}"/>
+                                <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].id}"/>
                                 <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].title}"/>
                                 <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].description}"/>
                                 <input type="hidden" th:field="*{lineItems[__${itemStat.index}__].author}"/>

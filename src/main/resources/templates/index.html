@@ -1,23 +1,91 @@
-<html lang="en"  xmlns:th="https://www.thymeleaf.org"  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
 
-    <link rel="stylesheet" media="screen" th:href="@{/js/jquery-2.0.0.min.js}"/>
+    <link media="screen" rel="stylesheet" th:href="@{/js/jquery-2.0.0.min.js}"/>
 
 
     <!-- Bootstrap4 files-->
     <script th:src="@{/js/bootstrap.bundle.min.js}" type="text/javascript"></script>
-    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css"/>
 
     <!-- Font awesome 5 -->
-    <link th:href="@{/fonts/fontawesome/css/fontawesome-all.min.css}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome/css/fontawesome-all.min.css}" type="text/css">
 
 
     <!-- custom style -->
-    <link th:href="@{/css/ui.css}" rel="stylesheet" type="text/css"/>
-    <link th:href="@{/css/responsive.css}" rel="stylesheet" media="only screen and (max-width: 1200px)"/>
+    <link rel="stylesheet" th:href="@{/css/ui.css}" type="text/css"/>
+    <link media="only screen and (max-width: 1200px)" rel="stylesheet" th:href="@{/css/responsive.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    var loading = false;
+  $(window).scroll(function() {
+     // retrieve the continuation token token from the hidden input field
+     // first time the continuation token will be populated by the server when it generates the page
+     // for subsequent calls the continuation token will be populated by the ProcessResponse(response) JS function
+    var token = $('#continuationToken').attr('value');
+
+    if (loading == false && token && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+        loading = true;
+        $.ajax({
+            type: "POST",
+            url: "/ebooks/next",
+            data: String(token),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            cache: false,
+            timeout: 600000,
+            success: function(response) {
+                processResponse(response);
+                loading = false;
+            },
+            error: function(req, status, error) {
+                alert(error);
+            }
+        });
+    }
+});
+
+    function processResponse(response) {
+
+       $.each(response.books, function(i, book) {
+       var text = `<div class="col-md-2 col-sm-6">
+                <form action="/ebooks/cart/item/add" id="addItemForm" method="post">
+                    <a href="#" onclick="parentNode.submit()">
+                        <figure class="figure">
+                            <div class="fill"><img style="max-height: 250px; max-width: 250px;" src="${book.image}">
+                            </div>
+                            <figcaption class="info-wrap">
+                                <div class="subTotal-wrap">
+                                    <span class="subTotal-new text-dark">$${book.discountedPrice}</span>
+                                    <del class="subTotal-old text-dark">$${book.price}</del>
+                                    <input id="title" name="title" value="${book.title}" type="hidden"/>
+                                    <input id="price" name="price" value="${book.discountedPrice}" type="hidden"/>
+                                    <input id="image" name="image" value="${book.image}" type="hidden"/>
+                                    <input id="description" name="description" value=""${book.description}""
+                                           type="hidden"/>
+                                    <input id="author" name="author" value="${book.author}" type="hidden"/>
+                                </div> <!-- subTotal-wrap.// -->
+                            </figcaption>
+                        </figure> <!-- card // -->
+                    </a>
+                </form>
+            </div>`;
+         $('#existing').append(text);
+       });
+         //The server send a null continuation token when there are no more documents to be read
+        if(response.continuationToken == null) {
+         $('#continuationToken').val("");
+         } else{
+         $('#continuationToken').val(response.continuationToken);
+         }
+};
+
+    </script>
 
 </head>
 <body>
@@ -26,7 +94,8 @@
         <div class="container-fluid bg-dark padding-top-sm">
             <div class="row-sm">
                 <div class="col-lg-4-24 col-sm-3 ">
-                        <a th:href="@{/ebooks/index}" class="text-white font-weight-bold"><i class="fa fa-home fa-2x text-warning"></i> Book Store</a>
+                    <a class="text-white font-weight-bold" th:href="@{/ebooks/index}"><i
+                            class="fa fa-home fa-2x text-warning"></i> Book Store</a>
                 </div>
                 <div class="col-lg-11-24 col-sm-8">
                     <form action="#" class="py-1">
@@ -37,7 +106,7 @@
                                 <option value="">Top rated</option>
                                 <option value="">Latest</option>
                             </select>
-                            <input type="text" class="form-control" style="width:50%;" placeholder="tobe implemented">
+                            <input class="form-control" placeholder="tobe implemented" style="width:50%;" type="text">
                             <div class="input-group-append">
                                 <button class="btn btn-warning" type="submit">
                                     <i class="fa fa-search"></i>
@@ -51,18 +120,20 @@
                     <div class="widgets-wrap float-right row no-gutters py-1">
                         <div class="col-auto">
                             <div class="widget-header dropdown">
-                                    <div class="icontext">
-                                        <p class="text-white" th:inline="text">Hello, [[${customerId}]]<br>
-                                            <a href="#" class="text-white font-weight-bold">Account & Profile</a>
-                                        </p>
-                                    </div>
+                                <div class="icontext">
+                                    <p class="text-white" th:inline="text">Hello, [[${customerId}]]<br>
+                                        <a class="text-white font-weight-bold" href="#">Account & Profile</a>
+                                    </p>
+                                </div>
                             </div>  <!-- widget-header .// -->
                         </div> <!-- col.// -->
                         <div class="col-auto">
                             <div class="widget-header dropdown">
                                 <div class="icontext">
                                     <p class="text-white ">Returns</span><br>
-                                        <a th:href="@{/ebooks/order/customer/{customerId}(customerId=${customerId})}" class="text-white font-weight-bold">& Orders</a>
+                                        <a class="text-white font-weight-bold"
+                                           th:href="@{/ebooks/order/customer/{customerId}(customerId=${customerId})}">&
+                                            Orders</a>
                                     </p>
 
                                 </div>
@@ -70,11 +141,12 @@
                         </div> <!-- col.// -->
 
                         <div class="col-auto">
-                            <a href="#" class="widget-header">
+                            <a class="widget-header" href="#">
                                 <div class="icontext">
                                     <div class="icon-wrap">
-                                        <a th:href="@{/ebooks/cart}"> <span class="text-warning icon-sm fa fa-shopping-cart"
-                                              th:text="${cartItemCount}"></span></a>
+                                        <a th:href="@{/ebooks/cart}"> <span
+                                                class="text-warning icon-sm fa fa-shopping-cart"
+                                                th:text="${cartItemCount}"></span></a>
                                     </div>
                                 </div>
                             </a>
@@ -88,24 +160,28 @@
 
 
 <!-- ========================= SECTION CONTENT ========================= -->
-<section class="padding-y-sm">
-    <div class="container-fluid" style="color:blue;">
-        <div class="row-sm">
-            <div class="col-md-2 col-sm-6" th:each="book : ${books}">
+<section class="padding-y-sm" id="mainSection">
+    <div class="container-fluid" id="main" style="color:blue;">
+        <input id="continuationToken" name="continuationToken" th:value="${response.continuationToken}"
+               type="hidden"/>
+        <div id="existing" class="row-sm">
+            <div class="col-md-2 col-sm-6" th:each="book : ${response.books}">
                 <form action="#" id="addItemForm" method="post" th:action="@{/ebooks/cart/item/add}">
                     <a href="#" onclick="parentNode.submit()">
                         <figure class="figure">
-                            <div class="fill"><img  th:src="${book.image}" style="max-height: 250px; max-width: 250px;"></div>
+                            <div class="fill"><img style="max-height: 250px; max-width: 250px;" th:src="${book.image}">
+                            </div>
                             <figcaption class="info-wrap">
                                 <div class="subTotal-wrap">
-                                    <span class="subTotal-new text-dark" th:inline="text">$[[${book.discountedPrice}]]</span>
+                                    <span class="subTotal-new text-dark"
+                                          th:inline="text">$[[${book.discountedPrice}]]</span>
                                     <del class="subTotal-old text-dark" th:inline="text">$[[${book.price}]]</del>
-                                    <input type="hidden" th:value="${book.id}" id="bookId" name="bookId"/>
-                                    <input type="hidden" th:value="${book.title}" id="title" name="title"/>
-                                    <input type="hidden" th:value="${book.discountedPrice}" id="price" name="price"/>
-                                    <input type="hidden" th:value="${book.image}" id="image" name="image"/>
-                                    <input type="hidden" th:value="${book.description}" id="description" name="description"/>
-                                    <input type="hidden" th:value="${book.author}" id="author" name="author"/>
+                                    <input id="title" name="title" th:value="${book.title}" type="hidden"/>
+                                    <input id="price" name="price" th:value="${book.discountedPrice}" type="hidden"/>
+                                    <input id="image" name="image" th:value="${book.image}" type="hidden"/>
+                                    <input id="description" name="description" th:value="${book.description}"
+                                           type="hidden"/>
+                                    <input id="author" name="author" th:value="${book.author}" type="hidden"/>
                                 </div> <!-- subTotal-wrap.// -->
                             </figcaption>
                         </figure> <!-- card // -->

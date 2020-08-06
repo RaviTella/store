@@ -85,7 +85,7 @@ public class OrderController {
                 .getItems()
                 .forEach(cartItem -> {
                     LineItem lineItem = new LineItem();
-                    lineItem.setBookId(cartItem.getBookId());
+                    lineItem.setId(cartItem.getId());
                     lineItem.setTitle(cartItem.getTitle());
                     lineItem.setDescription(cartItem.getDescription());
                     lineItem.setAuthor(cartItem.getAuthor());

@@ -1,7 +1,6 @@
 package com.ratella.store.controller;
 
 import com.ratella.store.model.cart.CartItem;
-import com.ratella.store.model.cart.CartRepository;
 import com.ratella.store.model.cart.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 public class CartController {
@@ -29,6 +29,9 @@ public class CartController {
     @RequestMapping(value = "/ebooks/cart/item/add", method = RequestMethod.POST)
     public Mono<String> addItem(CartItem item, WebSession session) {
         logger.info("Session ID in /cart/add" + this.getClass() + ": " + session.getId());
+        item.setId(UUID
+                .randomUUID()
+                .toString());
         item.setQuantity(1);
         logger.info("adding item to cart");
         return cartService

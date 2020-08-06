@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CartItem {
-    String bookId;
+    String id;
     String title;
     int quantity;
     BigDecimal price;
@@ -14,12 +14,12 @@ public class CartItem {
     String description;
     String author;
 
-    public String getBookId() {
-        return bookId;
+    public String getId() {
+        return id;
     }
 
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {

@@ -70,6 +70,7 @@ public class OrderController {
     @RequestMapping(value = "/ebooks/order/customer/{customerId}", method = RequestMethod.GET)
     public String getCustomerOrders(@PathVariable String customerId, Model model, WebSession session) {
         model.addAttribute("orders", orderRepository.getOrders(customerId));
+        model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
         return "orders";
 
     }

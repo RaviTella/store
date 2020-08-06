@@ -29,7 +29,7 @@ public class BookRepository {
         this.cosmosDB = cosmosDB;
     }
 
-    public Flux<Response> getBooks() {
+    public Flux<Response> getBooks(int preferredPageSize, int pagesToReturn) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
         String query = "SELECT * FROM Book";
         CosmosPagedFlux<Book> pagedFluxResponse = cosmosDB
@@ -37,15 +37,15 @@ public class BookRepository {
                 .queryItems(
                         query, queryOptions, Book.class);
         return pagedFluxResponse
-                .byPage(18)
-                .take(1)
+                .byPage(preferredPageSize)
+                .take(pagesToReturn)
                 .map(page -> {
                 return new Response(page.getContinuationToken(),page.getResults());
                 });
     }
 
 
-    public Flux<Response>  getBooksPage(String continuationToken) {
+    public Flux<Response>  getBooks(String continuationToken, int preferredPageSize, int pagesToReturn) {
         CosmosQueryRequestOptions queryOptions = new CosmosQueryRequestOptions();
         String query = "SELECT * FROM Book";
         CosmosPagedFlux<Book> pagedFluxResponse = cosmosDB
@@ -53,8 +53,8 @@ public class BookRepository {
                 .queryItems(
                         query, queryOptions, Book.class);
         return pagedFluxResponse
-                .byPage(continuationToken,6)
-                .take(1)
+                .byPage(continuationToken,preferredPageSize)
+                .take(pagesToReturn)
                 .map(page -> {
                     return new Response(page.getContinuationToken(),page.getResults());
                 });

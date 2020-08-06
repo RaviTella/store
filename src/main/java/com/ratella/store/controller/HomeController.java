@@ -32,11 +32,9 @@ public class HomeController {
 
     @RequestMapping(value = "/ebooks/index", method = RequestMethod.GET)
     public String home(Model model, WebSession session, Principal principal) {
-        model.addAttribute("books", bookRepository.getBooks().flatMap(response -> Flux.fromIterable(response.getBooks())));
-        model.addAttribute("continuationToken",bookRepository.getBooks().map(Response::getContinuationToken).onErrorReturn(""));
+        model.addAttribute("response",bookRepository.getBooks(18,1).single());
         model.addAttribute("cartItemCount", cartService.getNumberOfItemsInTheCart(session.getId()));
         model.addAttribute("customerId", principal.getName());
-
         return "index";
     }
 
@@ -44,7 +42,7 @@ public class HomeController {
     @ResponseBody
     public Mono<Response> next(@RequestBody String continuationToken, WebSession session, Principal principal) {
         logger.info("CALLING NEXT ACTION with Token: "+ continuationToken);
-        Flux<Response> result=bookRepository.getBooksPage(continuationToken);
+        Flux<Response> result=bookRepository.getBooks(continuationToken,6,1);
         return result.single();
     }
 
